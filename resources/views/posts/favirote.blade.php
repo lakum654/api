@@ -68,7 +68,7 @@
 </div>
 <script>
   $(document).ready(function(){
-    $(document).on('click','.favorite-btn',function(e){
+  /*  $(document).on('click','.favorite-btn',function(e){
       e.preventDefault();
       var selectedClass = $(this);
       var postId = $(this).data('id');
@@ -83,7 +83,7 @@
            }
         }
      });
-    });
+    });*/
   });
 </script>
 @endsection

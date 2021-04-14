@@ -17,9 +17,11 @@ class CommentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $comment = Comment::with('reply','user')->where('post_id',$request->postId)->latest('created_at')->take(1)->get();
+
+        return response()->json($comment);
     }
 
     /**
@@ -58,7 +60,7 @@ class CommentController extends Controller
             'post_id' => $post->id  
         ];
         Notification::send($post->user, new CommentNotification($details));
-        return view('posts.getComment',compact('post'));
+        return response()->json($post);
     }
 
     public function saveReply(Request $request){
@@ -67,8 +69,10 @@ class CommentController extends Controller
             'comment_id' => $request->commentId,
             'reply'      => $request->replyText   
         ]);
-        $post = Post::find($request->postId);
-        return view('posts.getComment',compact('post'));
+        $post = Post::with('comments')->find($request->postId);
+        $reply = $post->comments->reply;
+        return 1;
+        //return view('posts.getComment',compact('post'));
     }
 
     /**
@@ -79,7 +83,7 @@ class CommentController extends Controller
      */
     public function show($id)
     {
-        return 1;
+        return $id;
     }
 
     /**
@@ -100,9 +104,10 @@ class CommentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+       Comment::find($request->commentId)->update(['comment' => $request->comment]);
+       return 1;
     }
 
     /**

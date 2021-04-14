@@ -16,8 +16,10 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::all();
-        return view('posts.index',compact('posts'));
+        $posts = Post::orderBy('created_at','desc')->get();
+        $user = auth()->user();
+        $notification = $user->notifications->where('type','App\Notifications\CommentNotification');
+        return view('posts.index',compact('posts','notification'));
     }
 
     /**
@@ -51,7 +53,9 @@ class PostController extends Controller
      */
     public function favirote(){
         $posts = Auth::user()->myList;
-        return view('posts.favirote',compact('posts'));
+        $user = auth()->user();
+        $notification = $user->notifications->where('type','App\Notifications\CommentNotification');
+        return view('posts.favirote',compact('posts','notification'));
     }
 
     /**
@@ -62,11 +66,20 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        auth::user()->notifications()->where('data','LIKE',"%post_id%")->where('data','LIKE',"%$id%")->update(['read_at' => now()]);
+        auth::user()->notifications()->where('data','LIKE',"%post_id%")->where('data','LIKE',"%$id%")->delete();
         $post = Post::find($id);
-        return view('posts.post',compact('post'));
+        $user = auth()->user();
+        $notification = $user->notifications->where('type','App\Notifications\CommentNotification');
+        return view('posts.post',compact('post','notification'));
     }
 
+
+    public function store(Request $request){
+        $input = $request->all();
+        $input['user_id'] = Auth::id();
+        Post::create($input);
+        return redirect('posts');
+    }
     /**
      * Show the form for editing the specified resource.
      *
@@ -102,7 +115,7 @@ class PostController extends Controller
     }
 
     public function notification(){
-        $notifications = Auth::user()->notifications->where('type','App\Notifications\CommentNotification');
-        return view('posts.notification',compact('notifications'));
+        $notification = Auth::user()->notifications->where('type','App\Notifications\CommentNotification');
+        return view('posts.notification',compact('notification'));
     }
 }

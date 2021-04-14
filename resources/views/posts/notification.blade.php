@@ -4,14 +4,14 @@
 <div class="container">
    <table class="table table-sm">
        <tr>
-           <th>Post Id</th>
+           <th>Post Title</th>
            <th>Notification</th>
            {{--  <th>User Name</th>  --}}
            <th>Action URL</th>
            <th>Comment At</th>
        </tr>
        <tbody>
-           @foreach($notifications as $val)
+           @foreach($notification as $val)
             <tr>
                 <td>{{ $val->data['title'] }}</td>
                 <td>{{ $val->data['message'] }}</td>

@@ -69,8 +69,17 @@
                             @endif
                         @else
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url('favirote') }}"><span class="fa fa-user"> Favirote</span></a>
-                        </li>    
+                            <a class="nav-link" href="{{ url('comment-notification') }}" class="badge badge-pill badge-warning"><span class="fa fa-bell">{{ $notification->count() }}</span></a>
+                        </li> 
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('favirote') }}">Favirote </a>
+                        </li> 
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-toggle="modal" data-target="#postModal">Add New</a>
+                        </li> 
+
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }}
@@ -94,9 +103,42 @@
             </div>
         </nav>
 
+
         <main class="py-4">
             @yield('content')
         </main>
+
+        <!-- Modal -->
+<div class="modal fade" id="postModal" role="dialog">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Comment Reply</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form action="{{ route('posts.store') }}" method="POST">
+            @csrf()
+
+            <div class="form-group">
+                <label>Post Title</label>
+                <input type="text" name="title"  class="form-control">
+            </div>
+            
+            <div class="form-group">
+                <label>Description</label>
+                <textarea name="desc" class="form-control"></textarea>
+            </div>
+        
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-success">Create</button>
+    </form>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
     </div>
 </body>
 </html>
