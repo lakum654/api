@@ -69,18 +69,9 @@
                             @endif
                         @else
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url('comment-notification') }}" class="badge badge-pill badge-warning"><span class="fa fa-bell">{{ $notification->count() }}</span></a>
+                            <a class="nav-link" href="#" data-toggle="modal" data-target="#postModal">Add New</a>
                         </li> 
 
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url('favirote') }}">Favirote </a>
-                        </li> 
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url('attendance') }}">Attendance </a>
-                        </li> 
-
-        
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }}
@@ -105,9 +96,35 @@
         </nav>
 
 
-        <main class="py-4">
-            @yield('content')
-        </main>
+        <main class="py-5">
+            <div class="container w-50 bg-white" style="box-shadow: 3px 3px 3px 3px grey">
+                <h4>New Comment</h4>
+                <div class="title py-3">
+                    <h5>Post: {{ $data->title }}</h5>
+                </div>
+                <hr>
+                <div class="desc">
+                    <strong>Description</strong>
+                        <p>{{ $data->desc }}</p>
+                </div>
+                <div class="box">
+                   <form action="{{ route('comment.news')  }}" method="POST">
+                    @csrf()
+                    <input type="hidden" name="id" value="{{ $data->id }}">   
+                    <textarea class="form-control" name="comment">
+                    </textarea><br>
+                    <input type="submit" Value="Comment" class="btn btn-success m-3">
+                   </form>
+                </div>
+                <div class="view">
+                    <ul>
+                        @foreach($data->comments as  $val)
+                        <li>{{  $val->comment }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        </main>  
 
         <!-- Modal -->
 <div class="modal fade" id="postModal" role="dialog">
@@ -118,9 +135,16 @@
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
       <div class="modal-body">
-        <form action="{{ route('posts.store') }}" method="POST" id="myForm">
+        <form action="{{ route('oneToManyPholymorphic.store') }}" method="POST" id="myForm">
             @csrf()
 
+            <div class="form-group">
+                <label>Post Type</label>
+                <select name="type" class="form-control">
+                    <option>Article</option>
+                    <option>News</option>
+                </select>
+            </div>
             <div class="form-group">
                 <label>Post Title</label>
                 <input type="text" name="title" id="title" class="form-control" required>
@@ -146,18 +170,6 @@
 <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
-<script>
-    jQuery.validator.setDefaults({
-        debug: false,
-        success: "valid"
-      });
-      $( "#myForm" ).validate({
-        rules: {
-          title: {
-            required: true
-          }
-        }
-      });
-</script>
+
 </body>
 </html>

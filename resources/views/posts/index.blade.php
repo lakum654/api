@@ -28,6 +28,7 @@
            {{ Str::limit($post->desc,20) }}
           </p>
           <a href="{{ url('posts/'.$post->id) }}" class="btn btn-primary btn-sm">Detail..</a>
+          <span>Published By : {{ $post->user->name }}</span>
           <a href="#!" class="btn-link float-right favorite-btn {{ in_array($post->id,$favoriteList->toArray()) ? 'text-danger' : ''}}" data-id="{{ $post->id }}"><i class="fa fa-star"></i></a>
         </div>
       </div>
@@ -51,11 +52,11 @@
           @csrf
           <div class="form-group">
             <label for="title">Post Title:</label>
-            <input type="text" name="title" class="form-control form-control-sm" placeholder="Post Title" id="title">
+            <input type="text" name="title" class="form-control form-control-sm" placeholder="Post Title" id="title" required>
           </div>
           <div class="form-group">
             <label for="pwd">Post Description:</label>
-            <textarea class="form-control form-control-sm" name="desc" placeholder="Description.." id="desc"></textarea>
+            <textarea class="form-control form-control-sm" name="desc" placeholder="Description.." id="desc" required></textarea>
           </div>
       </div>
       <div class="modal-footer">
@@ -73,10 +74,17 @@
       var selectedClass = $(this);
       var postId = $(this).data('id');
       var _token = '{{ csrf_token() }}';
+      var type = '';
+      if($(this).hasClass('text-danger')){
+        selectedClass.removeClass('text-danger'); 
+        type = 'remove';
+      }else{
+        type = 'add';
+      }
       $.ajax({
         type:'POST',
         url:"{{ route('posts.favorite') }}",
-        data:{postId:postId,_token:_token},
+        data:{type:type,postId:postId,_token:_token},
         success:function(data) {
            if(data == 1){
             selectedClass.addClass('text-danger'); 

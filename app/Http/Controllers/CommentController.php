@@ -8,6 +8,7 @@ use App\Post;
 use App\Comment;
 use App\Reply;
 use Notification;
+use Illuminate\Support\Carbon;
 use App\Notifications\CommentNotification;
 
 class CommentController extends Controller
@@ -45,12 +46,10 @@ class CommentController extends Controller
         $post = Post::find($request->postId);
         $comment = new Comment;
         $comment->user_id = Auth::user()->id;
-        $comment->comment = $request->comment;
+        $comment->comment = $request->comment == null ? 'Empty Comment' : $request->comment;
         $post->comments()->save($comment);
         $post = Post::find($request->postId);
-       
 
-        
         $details = [
             'title' => $post->title,
             'message' => Auth::user()->name."was commented on your ".$post->title." Post",
@@ -64,10 +63,10 @@ class CommentController extends Controller
     }
 
     public function saveReply(Request $request){
-        
+            
         Reply::create([
             'comment_id' => $request->commentId,
-            'reply'      => $request->replyText   
+            'reply'      => $request->replyText == null ? 'Empty Reply' : $request->replyText   
         ]);
         $post = Post::with('comments')->find($request->postId);
         $reply = $post->comments->reply;
@@ -122,4 +121,5 @@ class CommentController extends Controller
         Reply::where('comment_id',$id)->delete();
         return back();
     }
+
 }

@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'country_id','name', 'email', 'password',
     ];
 
     /**
@@ -49,5 +49,14 @@ class User extends Authenticatable
 
     public function comments(){
         return $this->hasMany(Comment::class);
+    }
+
+    public function country(){
+        return $this->belongsTo(Country::class);
+    }
+
+    public function attendances()
+    {
+        return $this->hasMay(Attendance::class,'user_id','id');
     }
 }

@@ -11,9 +11,13 @@
 
     <!-- Scripts -->
     <script src="{{ asset('public/js/app.js') }}" defer></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
+
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
@@ -22,6 +26,7 @@
     <link href="{{ asset('public/css/app.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous" />
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    
     <style>
 
         .loader{
@@ -34,7 +39,16 @@
             z-index: 9999;
             background: url("{{ asset('public/loader.gif') }}") 
                         50% 50% no-repeat rgb(249,249,249);
-          } 
+          }
+body
+{
+    counter-reset: count;           /* Set the Serial counter to 0 */
+}
+tr .sr_no:first-child:before
+{
+  counter-increment: count;      /* Increment the Serial counter */
+  content:counter(count)"."; /* Display the counter */
+}
     </style>
 </head>
 <body>
@@ -69,18 +83,13 @@
                             @endif
                         @else
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url('comment-notification') }}" class="badge badge-pill badge-warning"><span class="fa fa-bell">{{ $notification->count() }}</span></a>
-                        </li> 
-
-                        <li class="nav-item">
                             <a class="nav-link" href="{{ url('favirote') }}">Favirote </a>
                         </li> 
 
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url('attendance') }}">Attendance </a>
+                            <a class="nav-link" href="#" data-toggle="modal" data-target="#postModal">Add New</a>
                         </li> 
 
-        
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }}
@@ -105,59 +114,51 @@
         </nav>
 
 
-        <main class="py-4">
-            @yield('content')
-        </main>
-
-        <!-- Modal -->
-<div class="modal fade" id="postModal" role="dialog">
-  <div class="modal-dialog modal-md">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Add New Post</h4>
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <form action="{{ route('posts.store') }}" method="POST" id="myForm">
-            @csrf()
-
-            <div class="form-group">
-                <label>Post Title</label>
-                <input type="text" name="title" id="title" class="form-control" required>
-                {{ $errors->first('title') }}
-            </div>
+       <main class="py-4">
+            <main class="container bg-white" style="box-shadow: 2px 2px 2px grey">
+                <center>
+                <form action="{{ url('orderSave') }}" method="POST">
+                    @csrf();
+                <table class="table" align="center">
+                   <thead>
+                    <tr>
+                        <th>Sr No</th>
+                        <th>User Country</th>
+                        <th>Category</th>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Amount</th>                        
+                    </tr>
+                   </thead>
+                   @php $total = 0 @endphp
+                   <tbody id="body">
+                    @forelse($orders as $key=>$val)
+                    <tr>
+                        <td>{{ $key + 1 }}</td>
+                        <td>{{ $val->user->country->name }}</td>
+                        <td>{{ $val->category->name }}</td>
+                        <td>{{ $val->product->name }}</td>
+                        <td>{{ $val->product->price }}</td>
+                        <td>{{ $val->quantity }}</td>
+                        <td>{{ $val->amount }}</td>
+                         @php $total = $total + $val->amount @endphp
+                    </tr>
+                    @empty
+                        No Data Found.
+                    @endforelse   
+                   </tbody>
+                   <tfoot>
+                       <td colspan="6"><strong>Total</strong></td>
+                       <td><strong>{{ $total  }}</strong> RS</td>
+                   </tfoot>
+                </table>
             
-            <div class="form-group">
-                <label>Description</label>
-                <textarea name="desc" id="desc" class="form-control"></textarea>
-                {{ $errors->first('desc') }}
-            </div>
-        
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-success">Create</button>
-    </form>
-      </div>
-    </div>
-  </div>
-</div>
-</div>
-</div>
-<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
-<script>
-    jQuery.validator.setDefaults({
-        debug: false,
-        success: "valid"
-      });
-      $( "#myForm" ).validate({
-        rules: {
-          title: {
-            required: true
-          }
-        }
-      });
-</script>
+            </form>    
+            </center>
+            </main>   
+
+
+
 </body>
 </html>

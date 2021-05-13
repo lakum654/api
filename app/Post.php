@@ -9,6 +9,11 @@ class Post extends Model
     protected $fillable = ['title','desc','like','dislike','user_id'];
 
 
+    // One To Many Pholymorphic
+    public function comments()
+    {
+        return $this->morphMany(Comment::class, 'commentable');
+    }
 
     //user for post
     public function user()

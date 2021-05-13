@@ -112,7 +112,7 @@
                   const today = new Date(value.created_at);
                    var commentData = '<div class="p-2">';
                     
-                    commentData += '<div class="commented-section mt-2"><div class="d-flex flex-row align-items-center commented-user"><h5 class="mr-2">'+value.user.name+'</h5><span class="dot mb-1"></span><span class="mb-1 ml-2">'+today.toLocaleTimeString()+'</span></div>';
+                    commentData += '<div class="commented-section mt-2"><div class="d-flex flex-row align-items-center commented-user"><h5 class="mr-2">'+value.user.name+'</h5><span class="dot mb-1"></span><span class="mb-1 ml-2">{{ now()->diffForHumans() }}</span></div>';
                     
                     commentData += '<div class="comment-text-sm"><span class="commentText-'+value.id+'">'+value.comment+'</span><div class="d-flex flex-row align-items-center voting-icons"><i class="fa fa-sort-up fa-2x mt-3 hit-voting"></i><i class="fa fa-sort-down fa-2x mb-3 hit-voting"></i>';
                       
@@ -206,7 +206,10 @@
             $('.loader').hide();            
             var commentId = $('#commentId').val();
             var replyText = $('#replyText').val();
-            $('.reply-'+commentId).append('<div class="reply-section mt-2"><div class="d-flex flex-row align-items-center repled-user" style="font-size:13px"><span class="text-sm" >'+replyText+'</span><span  class="mb-1 ml-2">Now</span>');
+            if(replyText == ''){
+              replyText = "Empty Reply";
+            }
+            $('.reply-'+commentId).append('<div class="reply-section mt-2"><div class="d-flex flex-row align-items-center repled-user" style="font-size:13px"><span class="text-sm" >'+replyText+'</span><span  class="mb-1 ml-2">{{ now()->diffForHumans() }}</span>');
             var _token = '{{ csrf_token() }}';
             $.ajax({
                 type:'POST',
@@ -248,10 +251,24 @@
             }
         })
       });
-        
-    })
+  })   
 
-    
+</script>
+<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
+<script>
+  jQuery.validator.setDefaults({
+    debug: false,
+    success: "valid"
+  });
+  $( "#myForm" ).validate({
+    rules: {
+      title: {
+        required: true
+      }
+    }
+  });
 
 </script>
 @endsection

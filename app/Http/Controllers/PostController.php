@@ -36,8 +36,15 @@ class PostController extends Controller
         $id = Auth::user()->id;
         $user = User::find($id);
         $post = $request->postId;
-        $user->myList()->attach($post);
-        return 1;
+        if($request->type == 'add'){
+            $user->myList()->attach($post);
+            return 1;
+        }elseif($request->type == 'remove'){
+            $user->myList()->detach($post);
+            return 0;
+        }
+        
+        
     }
 
     public function addLike(Request $request){
@@ -75,6 +82,10 @@ class PostController extends Controller
 
 
     public function store(Request $request){
+       $request->validate([
+            'title' => 'required',
+            'desc'  => 'required'
+       ]);
         $input = $request->all();
         $input['user_id'] = Auth::id();
         Post::create($input);

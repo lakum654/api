@@ -15,7 +15,11 @@
                     @endif
 
                     {{ __('You are logged in!') }}
-                    <h3 class="text-right"><a href="posts" class="btn btn-success">All Posts</a></h3>
+                   <div class="d-flex flex-row justify-content-around">
+                    <h3><a href="posts" class="btn btn-success">All Posts</a></h3>
+                    <h3><a href="products" class="btn btn-success">New Order</a></h3>
+                    <h3><a href="orders" class="btn btn-success">My Order</a></h3>
+                   </div>
                 </div>
             </div>
         </div>
