@@ -30,4 +30,11 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'google' => [
+        'client_id' => '169933478912-0sp9aq0rokmm3pcetrflg7ciguvphgoj.apps.googleusercontent.com',
+        'client_secret' => 'gS_9RjYEZdUCXWcU_XNcnJgX',
+        'redirect' => 'http://localhost/angelspearlinfoteach/auth/google/callback',
+    ],
+
+
 ];

@@ -59,3 +59,6 @@ Route::any('attendance/out/{workingHours}','PmsController@out');
 Route::any('attendance/startWork/{seconds}','PmsController@startWork');
 Route::get('attendance/report','PmsController@report');
 Route::get('attendance/getData','PmsController@getData');
+
+Route::get('auth/google', 'Auth\GoogleController@redirectToGoogle');
+Route::get('auth/google/callback', 'Auth\GoogleController@handleGoogleCallback');
