@@ -36,5 +36,17 @@ return [
         'redirect' => 'http://localhost/angelspearlinfoteach/auth/google/callback',
     ],
 
+    'facebook' => [
+        'client_id' => '524653302238035',
+        'client_secret' => '0d4ac32b1f892d9169fa6a05130133e2',
+        'redirect' => 'http://localhost/angelspearlinfoteach/auth/facebook/callback',
+    ],
+
+    'github' => [
+        'client_id' => '478260f9df306b2fdde9',
+        'client_secret' => '66c7199bb048e72cdabccdc888ff46a8b0762672',
+        'redirect' => 'http://localhost/angelspearlinfoteach/auth/github/callback',
+    ],
+
 
 ];
