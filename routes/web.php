@@ -62,3 +62,9 @@ Route::get('attendance/getData','PmsController@getData');
 
 Route::get('auth/google', 'Auth\GoogleController@redirectToGoogle');
 Route::get('auth/google/callback', 'Auth\GoogleController@handleGoogleCallback');
+
+Route::get('auth/facebook', 'Auth\FacebookController@redirectToFacebook');
+Route::get('auth/facebook/callback', 'Auth\FacebookController@handleFacebookCallback');
+
+Route::get('auth/github', 'Auth\GithubController@redirectToGithub');
+Route::get('auth/github/callback', 'Auth\GithubController@handleGithubCallback');
